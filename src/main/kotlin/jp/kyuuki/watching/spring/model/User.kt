@@ -10,6 +10,7 @@ data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int = 0,
-        var phone_number: String = "",
-        var nick_name: String = ""
+        var phoneNumber: String = "",
+        var nickName: String = "",
+        var apiKey: String = ""
 )

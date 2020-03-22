@@ -1,8 +1,8 @@
 package jp.kyuuki.watching.spring
 
 import jp.kyuuki.watching.spring.model.Event
-import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.repotitory.UserRepository
+import jp.kyuuki.watching.spring.model.request.UserRegistration
+import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,21 +18,21 @@ class RootController {
     }
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userService: UserService
 
     @RequestMapping("/users", method = [ POST ])
-    fun postUsers(@RequestBody user: User): Map<String, Any> {
+    fun postUsers(@RequestBody userRegistration: UserRegistration): Map<String, Any> {
         logger.info("postUsers")
 
-        userRepository.save(user)
-        logger.info(user.toString())
+        val user = userService.registor(userRegistration.phone_number)
 
-        return mapOf("id" to user.id, "api_key" to "ABCDEFG")
+        return mapOf("id" to user.id, "api_key" to user.apiKey)
     }
 
     @RequestMapping("/users", method = [ PUT ])
     fun putUsers(): Map<String, Int> {
         logger.info("putUsers")
+
         return mapOf()
     }
 
