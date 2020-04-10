@@ -1,4 +1,4 @@
-package jp.kyuuki.watching.spring.repotitory
+package jp.kyuuki.watching.spring.repository
 
 import jp.kyuuki.watching.spring.model.User
 import org.springframework.data.repository.CrudRepository

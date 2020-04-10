@@ -1,11 +1,10 @@
 package jp.kyuuki.watching.spring.service
 
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.repotitory.UserRepository
+import jp.kyuuki.watching.spring.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class UserService() {

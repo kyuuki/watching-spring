@@ -41,4 +41,9 @@ class RootController {
         logger.info("getEvents")
         return arrayOf(Event(1234, "おはよう"), Event(5678, "おやすみ"), Event(5678, "おはよう"))
     }
+
+    @RequestMapping("/", method = [ GET ])
+    fun getRoot(): Array<Event> {
+        return arrayOf()
+    }
 }
