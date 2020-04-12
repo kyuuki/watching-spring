@@ -4,6 +4,7 @@ import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -41,6 +42,23 @@ class UserService() {
         }
 
         logger.info(user.toString())
+
+        return user
+    }
+
+    /**
+     * ユーザー更新.
+     */
+    fun update(id: Int, nickName: String): User? {
+        // 同じ電話番号のユーザーを探す
+        var user = userRepository.findByIdOrNull(id)
+
+        // TODO: 見つからなかった場合のエラー処理
+
+        if (user != null) {
+            user.nickName = nickName
+            userRepository.save(user)
+        }
 
         return user
     }

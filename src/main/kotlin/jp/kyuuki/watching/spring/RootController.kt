@@ -1,6 +1,7 @@
 package jp.kyuuki.watching.spring
 
 import jp.kyuuki.watching.spring.model.Event
+import jp.kyuuki.watching.spring.model.request.UpdateUser
 import jp.kyuuki.watching.spring.model.request.UserRegistration
 import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
@@ -31,8 +32,13 @@ class RootController {
     }
 
     @RequestMapping("/users", method = [ PUT ])
-    fun putUsers(): Map<String, Int> {
+    fun putUsers(@RequestBody updateUser: UpdateUser): Map<String, Int> {
         logger.info("putUsers")
+        logger.info(updateUser.toString())
+
+        // TODO: 認証
+
+        val user = userService.update(updateUser.id, updateUser.nickName)
 
         return mapOf()
     }
