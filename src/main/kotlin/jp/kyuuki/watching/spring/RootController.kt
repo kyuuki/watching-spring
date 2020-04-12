@@ -23,6 +23,7 @@ class RootController {
     @RequestMapping("/users", method = [ POST ])
     fun postUsers(@RequestBody userRegistration: UserRegistration): Map<String, Any> {
         logger.info("postUsers")
+        logger.info(userRegistration.toString())
 
         val user = userService.registor(userRegistration.phone_number)
 
@@ -40,10 +41,5 @@ class RootController {
     fun getEvents(): Array<Event> {
         logger.info("getEvents")
         return arrayOf(Event(1234, "おはよう"), Event(5678, "おやすみ"), Event(5678, "おはよう"))
-    }
-
-    @RequestMapping("/", method = [ GET ])
-    fun getRoot(): Array<Event> {
-        return arrayOf()
     }
 }
