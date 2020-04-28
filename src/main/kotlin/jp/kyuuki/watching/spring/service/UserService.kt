@@ -49,14 +49,14 @@ class UserService() {
     /**
      * ユーザー更新.
      */
-    fun update(id: Int, nickName: String): User? {
+    fun update(id: Int, nickname: String): User? {
         // 同じ電話番号のユーザーを探す
         var user = userRepository.findByIdOrNull(id)
 
         // TODO: 見つからなかった場合のエラー処理
 
         if (user != null) {
-            user.nickName = nickName
+            user.nickname = nickname
             userRepository.save(user)
         }
 

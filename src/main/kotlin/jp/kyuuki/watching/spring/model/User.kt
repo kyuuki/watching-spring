@@ -1,5 +1,7 @@
 package jp.kyuuki.watching.spring.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -10,7 +12,10 @@ data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int = 0,
+        @JsonIgnore
         var phoneNumber: String = "",
-        var nickName: String = "",
+        @JsonProperty("nick_name")
+        var nickname: String = "",
+        @JsonIgnore
         var apiKey: String = ""
 )

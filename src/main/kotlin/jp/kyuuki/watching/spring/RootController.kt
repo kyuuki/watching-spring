@@ -2,6 +2,7 @@ package jp.kyuuki.watching.spring
 
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
+import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.model.request.UpdateUser
 import jp.kyuuki.watching.spring.model.request.UserRegistration
 import jp.kyuuki.watching.spring.service.AuthenticationService
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.*
+import java.util.*
 
 @RestController
 @RequestMapping("/v1")
@@ -58,8 +60,18 @@ class RootController {
     }
 
     @RequestMapping("/events", method = [ GET ])
-    fun getEvents(): Array<Event> {
+    fun getEvents(): List<Event> {
         logger.info("getEvents")
-        return arrayOf(Event(1234, "おはよう"), Event(5678, "おやすみ"), Event(5678, "おはよう"))
+        val userArray = arrayOf(User(2314, "", "イソップ", ""), User(1234, "", "サチ", ""))
+        val descriptionArray = arrayOf("おはよう", "おやすみ")
+        val list = mutableListOf<Event>()
+        for (i in 1..30) {
+            val user = userArray[i % userArray.size]
+            val description = descriptionArray[i % descriptionArray.size]
+
+            list.add(Event(i, description, Date(), user))
+        }
+
+        return list
     }
 }
