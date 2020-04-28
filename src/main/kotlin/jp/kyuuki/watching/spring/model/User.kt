@@ -14,7 +14,6 @@ data class User(
         var id: Int = 0,
         @JsonIgnore
         var phoneNumber: String = "",
-        @JsonProperty("nick_name")
         var nickname: String = "",
         @JsonIgnore
         var apiKey: String = ""

@@ -54,7 +54,7 @@ class RootController {
             }
         }
 
-        val user = userService.update(updateUser.id, updateUser.nickName)
+        val user = userService.update(updateUser.id, updateUser.nickname)
 
         return mapOf()
     }
