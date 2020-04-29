@@ -16,5 +16,5 @@ data class User(
         var phoneNumber: String,
         var nickname: String? = null,
         @JsonIgnore
-        var apiKey: String = ""
+        var apiKey: String
 )

@@ -32,8 +32,6 @@ class UserService() {
         var user = userRepository.findByPhoneNumber(formattedPhoneNumber)
 
         if (user == null) {
-            user = User(phoneNumber = formattedPhoneNumber)
-
             // API キー作成
             // https://www.baeldung.com/kotlin-random-alphanumeric-string
             val randomString = (1..STRING_LENGTH)
@@ -41,7 +39,7 @@ class UserService() {
                     .map(charPool::get)
                     .joinToString("");
 
-            user.apiKey = randomString
+            user = User(phoneNumber = formattedPhoneNumber, apiKey = randomString)
 
             userRepository.save(user)
         }
