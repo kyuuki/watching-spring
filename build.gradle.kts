@@ -33,6 +33,9 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 	runtimeOnly("com.h2database:h2")
+
+	// https://github.com/google/libphonenumber/wiki/Android-Studio-setup
+	implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
 }
 
 tasks.withType<Test> {

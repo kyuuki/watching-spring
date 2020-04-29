@@ -34,7 +34,9 @@ class RootController {
         logger.info("postUsers")
         logger.info(userRegistration.toString())
 
-        val user = userService.registor(userRegistration.phone_number)
+        val user = userService.registor(
+                userRegistration.phoneNumber.countryCode,
+                userRegistration.phoneNumber.original)
 
         return mapOf("id" to user.id, "api_key" to user.apiKey)
     }

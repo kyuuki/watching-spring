@@ -26,11 +26,10 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
     @Test
     @Transactional
     fun testPostUser() {
-        val requestBodyJson = mapper.writeValueAsString(mapOf("phone_number" to "09099999999"))
-//        val requestBodyJson = mapper.writeValueAsString(
-//                mapOf("phone_number" to mapOf(
-//                        "country_code" to 81,
-//                        "original" to "09099999999")))
+        val requestBodyJson = mapper.writeValueAsString(
+                mapOf("phone_number" to mapOf(
+                        "country_code" to 81,
+                        "original" to "09099999999")))
         println(requestBodyJson)
 
         val result = mockMvc.perform(post("/v1/users")

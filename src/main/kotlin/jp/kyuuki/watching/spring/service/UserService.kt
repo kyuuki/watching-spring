@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 
 @Service
 class UserService() {
@@ -47,6 +48,37 @@ class UserService() {
     }
 
     /**
+     * ユーザー登録.
+     */
+    fun registor(contryCode: Int, original: String): User {
+        // 電話番号正規化
+        val formattedPhoneNumber = normalizePhoneNumber(contryCode, original)
+        logger.debug("formattedPhoneNumber = $formattedPhoneNumber")
+
+        // 同じ電話番号のユーザーを探す
+        var user = userRepository.findByPhoneNumber(formattedPhoneNumber)
+
+        if (user == null) {
+            user = User(phoneNumber = formattedPhoneNumber)
+
+            // API キー作成
+            // https://www.baeldung.com/kotlin-random-alphanumeric-string
+            val randomString = (1..STRING_LENGTH)
+                    .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                    .map(charPool::get)
+                    .joinToString("");
+
+            user.apiKey = randomString
+
+            userRepository.save(user)
+        }
+
+        logger.info(user.toString())
+
+        return user
+    }
+
+    /**
      * ユーザー更新.
      */
     fun update(id: Int, nickname: String): User? {
@@ -61,5 +93,18 @@ class UserService() {
         }
 
         return user
+    }
+
+    /**
+     * 電話番号正規化.
+     *
+     * @return  正規化した電話番号 (ex. +819099999999)
+     */
+    fun normalizePhoneNumber(contryCode: Int, original: String): String {
+        val util: PhoneNumberUtil = PhoneNumberUtil.getInstance()
+        val phoneNumber = util.parse(original, util.getRegionCodeForCountryCode(contryCode))
+                ?: throw IllegalArgumentException()
+
+        return util.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164)
     }
 }
