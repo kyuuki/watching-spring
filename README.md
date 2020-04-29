@@ -37,7 +37,7 @@ Deployment to AWS
 
 ## References
 
-* [API](https://watching-project.herokuapp.com/redoc.html)
+* [API](https://app.swaggerhub.com/apis-docs/kyuuki/Watching/1.0.0)
 
 ## License
 
