@@ -13,8 +13,8 @@ data class User(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int = 0,
         @JsonIgnore
-        var phoneNumber: String = "",
-        var nickname: String = "",
+        var phoneNumber: String,
+        var nickname: String? = null,
         @JsonIgnore
         var apiKey: String = ""
 )

@@ -1,8 +1,6 @@
-package jp.kyuuki.watching.spring
+package jp.kyuuki.watching.spring.controller.v1
 
 import javassist.NotFoundException
-import jp.kyuuki.watching.spring.model.Event
-import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.model.request.UpdateUser
 import jp.kyuuki.watching.spring.model.request.UserRegistration
 import jp.kyuuki.watching.spring.service.AuthenticationService
@@ -11,16 +9,15 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod.*
-import java.util.*
+import org.springframework.web.bind.annotation.RequestMethod.POST
+import org.springframework.web.bind.annotation.RequestMethod.PUT
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1")
-class RootController {
+class UserController: BaseController() {
     companion object {
-        private val logger = LoggerFactory.getLogger(RootController::class.java)
+        private val logger = LoggerFactory.getLogger(UserController::class.java)
     }
 
     @Autowired
@@ -29,6 +26,9 @@ class RootController {
     @Autowired
     lateinit var authenticationService: AuthenticationService
 
+    /**
+     * ユーザー登録 API.
+     */
     @RequestMapping("/users", method = [ POST ])
     fun postUsers(@RequestBody userRegistration: UserRegistration): Map<String, Any> {
         logger.info("postUsers")
@@ -41,6 +41,9 @@ class RootController {
         return mapOf("id" to user.id, "api_key" to user.apiKey)
     }
 
+    /**
+     * ユーザー更新 API.
+     */
     @RequestMapping("/users", method = [ PUT ])
     fun putUsers(@RequestHeader(name = "x-api-key") apiKey: String?,  // TODO: 後で必須に
                  @RequestBody updateUser: UpdateUser): Map<String, Int> {
@@ -59,21 +62,5 @@ class RootController {
         val user = userService.update(updateUser.id, updateUser.nickname)
 
         return mapOf()
-    }
-
-    @RequestMapping("/events", method = [ GET ])
-    fun getEvents(): List<Event> {
-        logger.info("getEvents")
-        val userArray = arrayOf(User(2314, "", "イソップ", ""), User(1234, "", "サチ", ""))
-        val descriptionArray = arrayOf("おはよう", "おやすみ")
-        val list = mutableListOf<Event>()
-        for (i in 1..30) {
-            val user = userArray[i % userArray.size]
-            val description = descriptionArray[i % descriptionArray.size]
-
-            list.add(Event(i, description, Date(), user))
-        }
-
-        return list
     }
 }

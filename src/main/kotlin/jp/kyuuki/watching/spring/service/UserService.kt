@@ -23,33 +23,6 @@ class UserService() {
     /**
      * ユーザー登録.
      */
-    fun registor(phoneNumber: String): User {
-        // 同じ電話番号のユーザーを探す
-        var user = userRepository.findByPhoneNumber(phoneNumber)
-
-        if (user == null) {
-            user = User(phoneNumber = phoneNumber)
-
-            // API キー作成
-            // https://www.baeldung.com/kotlin-random-alphanumeric-string
-            val randomString = (1..STRING_LENGTH)
-                    .map { kotlin.random.Random.nextInt(0, charPool.size) }
-                    .map(charPool::get)
-                    .joinToString("");
-
-            user.apiKey = randomString
-
-            userRepository.save(user)
-        }
-
-        logger.info(user.toString())
-
-        return user
-    }
-
-    /**
-     * ユーザー登録.
-     */
     fun registor(contryCode: String, original: String): User {
         // 電話番号正規化
         val formattedPhoneNumber = normalizePhoneNumber(contryCode, original)
