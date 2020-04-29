@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -28,14 +29,14 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
     fun testPostUser() {
         val requestBodyJson = mapper.writeValueAsString(
                 mapOf("phone_number" to mapOf(
-                        "country_code" to 81,
+                        "country_code" to "JP",
                         "original" to "09099999999")))
         println(requestBodyJson)
 
         val result = mockMvc.perform(post("/v1/users")
-                .contentType("application/json")
-                .content(requestBodyJson))
-
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyJson)
+        )
                 .andExpect(status().isOk)
                 .andReturn()
 
@@ -55,10 +56,10 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
         println(requestBodyJson)
 
         val result = mockMvc.perform(put("/v1/users")
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 //.header("x-api-key", "xxxxxx")
-                .content(requestBodyJson))
-
+                .content(requestBodyJson)
+        )
                 .andExpect(status().isOk)
                 .andReturn()
         val node = mapper.readTree(result.response.contentAsString)

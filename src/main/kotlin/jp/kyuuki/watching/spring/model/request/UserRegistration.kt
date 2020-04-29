@@ -5,6 +5,6 @@ data class UserRegistration(
 )
 
 data class PhoneNumber(
-        var countryCode: Int,
+        var countryCode: String,
         var original: String
 )

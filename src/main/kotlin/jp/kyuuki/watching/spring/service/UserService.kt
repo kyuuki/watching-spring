@@ -50,7 +50,7 @@ class UserService() {
     /**
      * ユーザー登録.
      */
-    fun registor(contryCode: Int, original: String): User {
+    fun registor(contryCode: String, original: String): User {
         // 電話番号正規化
         val formattedPhoneNumber = normalizePhoneNumber(contryCode, original)
         logger.debug("formattedPhoneNumber = $formattedPhoneNumber")
@@ -100,9 +100,9 @@ class UserService() {
      *
      * @return  正規化した電話番号 (ex. +819099999999)
      */
-    fun normalizePhoneNumber(contryCode: Int, original: String): String {
+    fun normalizePhoneNumber(countryCode: String, original: String): String {
         val util: PhoneNumberUtil = PhoneNumberUtil.getInstance()
-        val phoneNumber = util.parse(original, util.getRegionCodeForCountryCode(contryCode))
+        val phoneNumber = util.parse(original, countryCode.toUpperCase())
                 ?: throw IllegalArgumentException()
 
         return util.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164)
