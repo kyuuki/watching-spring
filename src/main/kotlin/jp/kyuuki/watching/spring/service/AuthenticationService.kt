@@ -18,6 +18,10 @@ class AuthenticationService() {
     /**
      * 認証.
      */
+    fun authentication(apiKey: String): User? {
+        return userRepository.findByApiKey(apiKey)
+    }
+
     fun authentication(apiKey: String, id: Int): User? {
         return userRepository.findByIdAndApiKey(id, apiKey)
     }
