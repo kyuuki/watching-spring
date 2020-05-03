@@ -3,12 +3,13 @@ package jp.kyuuki.watching.spring.controller.v1
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.service.AuthenticationService
+import jp.kyuuki.watching.spring.model.request.PostEvents
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.GET
+import org.springframework.web.bind.annotation.RequestMethod.POST
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
@@ -18,15 +19,13 @@ class EventController: BaseController() {
         private val logger = LoggerFactory.getLogger(EventController::class.java)
     }
 
-    @Autowired
-    lateinit var authenticationService: AuthenticationService
-
     @RequestMapping("/events", method = [ GET ])
     fun getEvents(@RequestHeader(name = "x-api-key") apiKey: String): List<Event> {
         logger.info("getEvents")
+        logger.info("apiKey = $apiKey")
 
         // 認証
-        val user: User? = authenticationService.authentication(apiKey)
+        val user: User? = authenticationComponent.authenticate(apiKey)
         if (user == null) {
             // TODO: エラーレスポンス要検討
             throw NotFoundException("Authentication error")
@@ -50,5 +49,22 @@ class EventController: BaseController() {
         }
 
         return list
+    }
+
+    @RequestMapping("/events", method = [ POST ])
+    fun postEvents(@RequestHeader(name = "x-api-key") apiKey: String,
+                   @RequestBody postEvents: PostEvents): Event {
+        logger.info("postEvents")
+        logger.info("apiKey = $apiKey")
+        logger.info("description = ${postEvents.description}")
+
+        // 認証
+        val user: User? = authenticationComponent.authenticate(apiKey)
+        if (user == null) {
+            // TODO: エラーレスポンス要検討
+            throw NotFoundException("Authentication error")
+        }
+
+        return Event(1001, postEvents.description, Date(), user)
     }
 }
