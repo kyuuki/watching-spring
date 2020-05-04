@@ -4,17 +4,23 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.jdbc.Sql
 
 @SpringBootTest
 class UserRepositoryTests {
     @Autowired
     lateinit var userRepository: UserRepository
 
-    //@Test
+    @Test
+    @Sql(statements = [
+        "DELETE user;",
+        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
     fun findByPhoneNumberTest() {
-        var a = userRepository.findByPhoneNumber("xxxx")
-        println(a)
-        assertEquals(null, a)
-        assertEquals(1, 1)
+        val user = userRepository.findByPhoneNumber("+819099999999")
+        println(user)
+
+        assertEquals("+819099999999", user!!.phoneNumber)
+        assertEquals("xxxapikey", user!!.apiKey)
     }
 }

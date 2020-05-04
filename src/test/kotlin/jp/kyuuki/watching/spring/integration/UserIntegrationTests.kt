@@ -1,31 +1,30 @@
 package jp.kyuuki.watching.spring.integration
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import jp.kyuuki.watching.spring.model.User
-import org.junit.jupiter.api.Assertions.assertNotNull
+import jp.kyuuki.watching.spring.repository.UserRepository
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestEntityManager
 class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
     // https://www.baeldung.com/jackson-object-mapper-tutorial
     val mapper = ObjectMapper();
 
+    @Autowired
+    lateinit var userRepository: UserRepository
+
     @Test
-    @Transactional
+    @Sql(statements = ["DELETE user WHERE phone_number = '+819099999999';"])
     fun testPostUser() {
         val requestBodyJson = mapper.writeValueAsString(
                 mapOf("phone_number" to mapOf(
@@ -40,30 +39,52 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
                 .andExpect(status().isOk)
                 .andReturn()
 
+        // データベース確認
+        // - JDBC で直接確認 (TODO)
+        // - DBUnit を使って確認 (TODO)
+        // - @DataJpaTest TestEntityManager を使ってテスト (TODO)
+        // - Repository を使って確認
+        val user = userRepository.findByPhoneNumber("+819099999999")
+        println(user.toString())
+
+        assertNotNull(user)
+        assertNull(user!!.nickname)
+        // 他の中身はレスポンスと照合
+
+        // レスポンス確認
         val node = mapper.readTree(result.response.contentAsString)
         println(node.get("id").asInt())
         println(node.get("api_key").asText())
 
-        assertNotNull(node.get("id").asInt())
-        assertNotNull(node.get("api_key").asText())
+        assertEquals(user!!.id, node.get("id").asInt())
+        assertEquals(user!!.apiKey, node.get("api_key").asText())
     }
 
-    //@Test
+    @Test
+    @Sql(statements = [
+        "DELETE user;",
+        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
     fun testPutUser() {
-        // TODO: データベースに API キー登録
-
-        val requestBodyJson = mapper.writeValueAsString(mapOf("id" to "1", "nickname" to "イソップ"))
+        val requestBodyJson = mapper.writeValueAsString(mapOf("nickname" to "ベルリン"))
         println(requestBodyJson)
 
         val result = mockMvc.perform(put("/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                //.header("x-api-key", "xxxxxx")
+                .header("x-api-key", "xxxapikey")
                 .content(requestBodyJson)
         )
                 .andExpect(status().isOk)
                 .andReturn()
-        val node = mapper.readTree(result.response.contentAsString)
 
-        // TODO: キーがないこと
+        // データベース確認
+        val user = userRepository.findByApiKey("xxxapikey")
+        println(user.toString())
+
+        assertNotNull(user)
+        assertEquals("ベルリン", user!!.nickname)
+
+        // レスポンス確認
+        assertEquals("", result.response.contentAsString)
     }
 }

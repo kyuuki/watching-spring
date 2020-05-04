@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -19,7 +20,28 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
     val mapper = ObjectMapper();
 
     @Test
-    @Sql(statements = ["INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"])
+    @Sql(statements = [
+        "DELETE user;",
+        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
+    fun testGetEvents() {
+        val result = mockMvc.perform(get("/v1/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", "xxxapikey")
+        )
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // TODO: レスポンス確認
+        val node = mapper.readTree(result.response.contentAsString)
+        println(node.size())
+    }
+
+    @Test
+    @Sql(statements = [
+        "DELETE user;",
+        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
     fun testPostEvents() {
         val requestBodyJson = mapper.writeValueAsString(
                 mapOf("description" to "Good morning"))
