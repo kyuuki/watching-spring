@@ -24,6 +24,7 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
+        "DELETE event;",
         "DELETE user;",
         "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
         "INSERT INTO user (phone_number, api_key, nickname) VALUES ('+819011111111', '', 'Tokyo');"
@@ -84,6 +85,7 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
+        "DELETE event;",
         "DELETE user;",
         "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
     ])

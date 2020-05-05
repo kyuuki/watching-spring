@@ -2,10 +2,9 @@ package jp.kyuuki.watching.spring.model
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.util.*
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
+@Entity
 data class Event(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,5 +12,7 @@ data class Event(
         val description: String,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         val createdAt: Date,
+
+        @ManyToOne
         val user: User
 )

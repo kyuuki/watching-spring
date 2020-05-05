@@ -4,7 +4,10 @@ import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.model.request.PostEvents
+import jp.kyuuki.watching.spring.service.EventService
+import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,6 +21,9 @@ class EventController: BaseController() {
     companion object {
         private val logger = LoggerFactory.getLogger(EventController::class.java)
     }
+
+    @Autowired
+    lateinit var eventService: EventService
 
     @RequestMapping("/events", method = [ GET ])
     fun getEvents(@RequestHeader(name = "x-api-key") apiKey: String): List<Event> {
@@ -68,6 +74,8 @@ class EventController: BaseController() {
             throw NotFoundException("Authentication error")
         }
 
-        return Event(1001, postEvents.description, Date(), user)
+        val event = eventService.save(user, postEvents.description)
+
+        return event
     }
 }
