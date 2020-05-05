@@ -21,6 +21,17 @@ class UserService() {
     lateinit var userRepository: UserRepository
 
     /**
+     * ユーザー検索.
+     */
+    fun search(phoneNumber: String): User? {
+        // 同じ電話番号のユーザーを探す
+        var user = userRepository.findByPhoneNumber(phoneNumber)
+        logger.info(user.toString())
+
+        return user
+    }
+
+    /**
      * ユーザー登録.
      */
     fun registor(contryCode: String, original: String): User {

@@ -10,8 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
@@ -22,6 +21,29 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Test
+    @Sql(statements = [
+        "DELETE user;",
+        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
+        "INSERT INTO user (phone_number, api_key, nickname) VALUES ('+819011111111', '', 'Tokyo');"
+    ])
+    fun testGetUser() {
+        val result = mockMvc.perform(get("/v1/users?phone_number=+819011111111")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", "xxxapikey")
+        )
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // レスポンス確認
+        val node = mapper.readTree(result.response.contentAsString)
+        println(node.get("id").asInt())
+        println(node.get("nickname").asText())
+
+        assertNotNull(node.get("id").asInt())
+        assertEquals("Tokyo", node.get("nickname").asText())
+    }
 
     @Test
     @Sql(statements = ["DELETE user WHERE phone_number = '+819099999999';"])

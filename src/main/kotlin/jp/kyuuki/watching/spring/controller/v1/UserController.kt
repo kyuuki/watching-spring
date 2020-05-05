@@ -7,12 +7,10 @@ import jp.kyuuki.watching.spring.model.request.UserRegistration
 import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.RequestMethod.GET
 import org.springframework.web.bind.annotation.RequestMethod.POST
 import org.springframework.web.bind.annotation.RequestMethod.PUT
-import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class UserController: BaseController() {
@@ -22,6 +20,26 @@ class UserController: BaseController() {
 
     @Autowired
     lateinit var userService: UserService
+
+    /**
+     * ユーザー検索 API.
+     */
+    @RequestMapping("/users", method = [ GET ])
+    fun getUsers(@RequestParam("phone_number") phoneNumber: String): User {
+        logger.info("getUsers")
+        logger.info("phone_number = $phoneNumber")
+
+        // TODO: Validation
+
+        val user = userService.search(phoneNumber)
+
+        if (user == null) {
+            // TODO: 404 を返す
+            throw NotFoundException("Cannot find user")
+        } else {
+            return user
+        }
+    }
 
     /**
      * ユーザー登録 API.
