@@ -21,6 +21,15 @@ class EventService() {
     lateinit var eventRepository: EventRepository
 
     /**
+     * イベント取得.
+     */
+    fun get(user: User): List<Event> {
+        // TODO: フォロー関係でちゃんとイベントを取得
+
+        return eventRepository.findAll()
+    }
+
+    /**
      * イベント登録.
      */
     fun save(user: User, description: String): Event {

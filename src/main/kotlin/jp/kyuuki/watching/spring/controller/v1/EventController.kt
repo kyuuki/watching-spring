@@ -37,25 +37,17 @@ class EventController: BaseController() {
             throw NotFoundException("Authentication error")
         }
 
-        val userArray = arrayOf(User(2314, "", "イソップ", ""), User(1234, "", "サチ", ""))
-        val descriptionArray = arrayOf("おはよう", "おやすみ")
         val list = mutableListOf<Event>()
 
         // TOOD: デバッグ用に 1 つめのメッセージは認証情報
-        list.add(Event(1001, "送られた x-api-key は $apiKey だよ！", Date(), user))
-        list.add(Event(1002, "あなたのニックネームは ${user.nickname}", Date(), user))
-        list.add(Event(1003, "あなたの ID は ${user.id}", Date(), user))
-        list.add(Event(1004, "あなたの電話番号は ${user.phoneNumber}", Date(), user))
+//        list.add(Event(1001, "送られた x-api-key は $apiKey だよ！", Date(), user))
+//        list.add(Event(1002, "あなたのニックネームは ${user.nickname}", Date(), user))
+//        list.add(Event(1003, "あなたの ID は ${user.id}", Date(), user))
+//        list.add(Event(1004, "あなたの電話番号は ${user.phoneNumber}", Date(), user))
 
-        for (i in 1..30) {
-            val user = userArray[i % userArray.size]
-            val description = descriptionArray[i % descriptionArray.size]
-
-            list.add(Event(i, description, Date(), user))
+        eventService.get(user).forEach {
+            list.add(it)
         }
-
-        // 最後に現在時刻表示
-        list.add(Event(2001, "現在時刻 は ${Date().toString()} だよ！", Date(), user))
 
         return list
     }
