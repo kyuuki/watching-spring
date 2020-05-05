@@ -48,6 +48,9 @@ class EventController: BaseController() {
             list.add(Event(i, description, Date(), user))
         }
 
+        // 最後に現在時刻表示
+        list.add(Event(2001, "現在時刻 は ${Date().toString()} だよ！", Date(), user))
+
         return list
     }
 
