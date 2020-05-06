@@ -1,4 +1,4 @@
-package jp.kyuuki.watching.spring.controller.v1
+package jp.kyuuki.watching.spring.web.api.v1
 
 import jp.kyuuki.watching.spring.component.AuthenticationComponent
 import org.springframework.beans.factory.annotation.Autowired

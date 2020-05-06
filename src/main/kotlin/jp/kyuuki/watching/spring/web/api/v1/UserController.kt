@@ -1,9 +1,9 @@
-package jp.kyuuki.watching.spring.controller.v1
+package jp.kyuuki.watching.spring.web.api.v1
 
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.model.request.UpdateUser
-import jp.kyuuki.watching.spring.model.request.UserRegistration
+import jp.kyuuki.watching.spring.web.api.request.PutUsers
+import jp.kyuuki.watching.spring.web.api.request.PostUsers
 import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,13 +45,13 @@ class UserController: BaseController() {
      * ユーザー登録 API.
      */
     @RequestMapping("/users", method = [ POST ])
-    fun postUsers(@RequestBody userRegistration: UserRegistration): Map<String, Any> {
+    fun postUsers(@RequestBody postUsers: PostUsers): Map<String, Any> {
         logger.info("postUsers")
-        logger.info(userRegistration.toString())
+        logger.info(postUsers.toString())
 
         val user = userService.registor(
-                userRegistration.phoneNumber.countryCode,
-                userRegistration.phoneNumber.original)
+                postUsers.phoneNumber.countryCode,
+                postUsers.phoneNumber.original)
 
         return mapOf("id" to user.id, "api_key" to user.apiKey)
     }
@@ -61,10 +61,10 @@ class UserController: BaseController() {
      */
     @RequestMapping("/users", method = [ PUT ])
     fun putUsers(@RequestHeader(name = "x-api-key") apiKey: String,
-                 @RequestBody updateUser: UpdateUser) {
+                 @RequestBody PutUsers: PutUsers) {
         logger.info("putUsers")
         logger.info("apiKey = $apiKey")
-        logger.info(updateUser.toString())
+        logger.info(PutUsers.toString())
 
         // 認証
         val user: User? = authenticationComponent.authenticate(apiKey)
@@ -73,6 +73,6 @@ class UserController: BaseController() {
             throw NotFoundException("Authentication error")
         }
 
-        userService.update(user.id, updateUser.nickname)
+        userService.update(user.id, PutUsers.nickname)
     }
 }

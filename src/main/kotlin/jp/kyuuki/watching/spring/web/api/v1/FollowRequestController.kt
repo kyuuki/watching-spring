@@ -1,8 +1,8 @@
-package jp.kyuuki.watching.spring.controller.v1
+package jp.kyuuki.watching.spring.web.api.v1
 
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.model.request.PostFollowRequests
+import jp.kyuuki.watching.spring.web.api.request.PostFollowRequests
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RequestMethod.GET

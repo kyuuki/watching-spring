@@ -1,11 +1,10 @@
-package jp.kyuuki.watching.spring.controller.v1
+package jp.kyuuki.watching.spring.web.api.v1
 
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.model.request.PostEvents
+import jp.kyuuki.watching.spring.web.api.request.PostEvents
 import jp.kyuuki.watching.spring.service.EventService
-import jp.kyuuki.watching.spring.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.GET
 import org.springframework.web.bind.annotation.RequestMethod.POST
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @RestController
 class EventController: BaseController() {

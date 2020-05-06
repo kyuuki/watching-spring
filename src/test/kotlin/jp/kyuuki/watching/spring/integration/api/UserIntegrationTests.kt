@@ -1,4 +1,4 @@
-package jp.kyuuki.watching.spring.integration
+package jp.kyuuki.watching.spring.integration.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jp.kyuuki.watching.spring.repository.UserRepository

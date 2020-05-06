@@ -1,6 +1,6 @@
-package jp.kyuuki.watching.spring.model.request
+package jp.kyuuki.watching.spring.web.api.request
 
-data class UserRegistration(
+data class PostUsers(
         val phoneNumber: PhoneNumber
 )
 
