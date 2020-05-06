@@ -61,7 +61,11 @@ class FollowRequestService() {
     /**
      * フォローリクエスト許可.
      */
-    fun accept(followRequest: FollowRequest) {
+    fun accept(id: Int) {
+        // TODO: トランザクションにする
+        // TODO: フォローテーブル挿入
+        // TODO: 他人のフォローリクエストを許可できないように
 
+        followRequestRepository.deleteById(id)
     }
 }

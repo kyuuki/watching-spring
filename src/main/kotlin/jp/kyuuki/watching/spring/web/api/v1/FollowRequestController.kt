@@ -65,6 +65,7 @@ class FollowRequestController: BaseController() {
         // TODO: エラーレスポンス要検討
         val user: User = authenticationComponent.authenticate(apiKey) ?: throw NotFoundException("Authentication error")
 
-        // TODO
+        // TODO: エラー処理
+        followRequestService.accept(id)
     }
 }
