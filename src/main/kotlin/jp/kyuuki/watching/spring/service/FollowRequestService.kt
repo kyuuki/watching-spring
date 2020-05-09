@@ -68,4 +68,15 @@ class FollowRequestService() {
 
         followRequestRepository.deleteById(id)
     }
+
+    /**
+     * フォローリクエスト拒否.
+     */
+    fun decline(id: Int) {
+        // TODO: 他人のフォローリクエストを拒否できないように
+
+        // 将来的に拒否の履歴は残しておきたい
+
+        followRequestRepository.deleteById(id)
+    }
 }

@@ -68,4 +68,21 @@ class FollowRequestController: BaseController() {
         // TODO: エラー処理
         followRequestService.accept(id)
     }
+
+    /**
+     * フォローリクエスト拒否 API.
+     */
+    @RequestMapping("/follow_requests/{id}/decline", method = [ POST ])
+    fun postFollowRequestsDecline(@RequestHeader(name = "x-api-key") apiKey: String,
+                                 @PathVariable("id") id: Int) {
+        logger.info("postFollowRequestsDecline")
+        logger.info("id = $id")
+
+        // 認証
+        // TODO: エラーレスポンス要検討
+        val user: User = authenticationComponent.authenticate(apiKey) ?: throw NotFoundException("Authentication error")
+
+        // TODO: エラー処理
+        followRequestService.decline(id)
+    }
 }

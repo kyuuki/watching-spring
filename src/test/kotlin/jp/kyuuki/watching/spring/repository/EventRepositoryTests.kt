@@ -11,7 +11,7 @@ class EventRepositoryTests {
     @Autowired
     lateinit var eventRepository: EventRepository
 
-    @Test
+    //@Test
     @Sql(statements = [
         "DELETE user;",
         "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
