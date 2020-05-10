@@ -6,6 +6,7 @@ import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.repository.FollowRequestRepository
 import jp.kyuuki.watching.spring.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -16,10 +17,20 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@Sql(statements = [
+    "DELETE follow_request;",
+    "DELETE event;",
+    "DELETE user;"
+])
 class FollowRequestIntegrationTests(@Autowired val mockMvc: MockMvc) {
-    val mapper = ObjectMapper();
+    companion object {
+        const val SENDER_API_KEY = "sender-api-key"
+
+        val mapper = ObjectMapper()
+    }
 
     @Autowired
     lateinit var followRequestRepository: FollowRequestRepository
@@ -27,12 +38,48 @@ class FollowRequestIntegrationTests(@Autowired val mockMvc: MockMvc) {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    // データベース初期化
+    // https://www.baeldung.com/spring-boot-data-sql-and-schema-sql
+
+    // API 送信ユーザー
+    lateinit var senderUser: User
+
+    @BeforeEach
+    fun setup() {
+        println("setup")
+
+        // ユーザー登録 (全ユーザーが消えている前提)
+        senderUser = userRepository.save(User(phoneNumber = "+819099999999", apiKey = SENDER_API_KEY))
+    }
+
     @Test
-    @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
-    ])
+    fun testPostFollowRequests() {
+        // フォローするユーザーをユーザー登録
+        val followedUser = userRepository.save(User(phoneNumber = "+819099999991", apiKey = "apikey-from"))
+
+        val requestBodyJson = mapper.writeValueAsString(
+                mapOf("user_id" to followedUser.id))
+        println(requestBodyJson)
+
+        // API 実行
+        val result = mockMvc.perform(post("/v1/follow_requests")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", SENDER_API_KEY)
+                .content(requestBodyJson)
+        )
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // データベース確認
+        val followRequest = followRequestRepository.findAll().last()
+        assertEquals(senderUser.id, followRequest.fromUser.id)
+        assertEquals(followedUser.id, followRequest.toUser.id)
+
+        // レスポンス確認
+        assertEquals("", result.response.contentAsString)
+    }
+
+    @Test
     fun testPostFollowRequestsDecline() {
         // ユーザー登録
         val fromUser = User(phoneNumber = "+819099999991", apiKey = "apikey-from")
@@ -47,7 +94,7 @@ class FollowRequestIntegrationTests(@Autowired val mockMvc: MockMvc) {
         // API 実行
         val result = mockMvc.perform(post("/v1/follow_requests/${followRequest.id}/decline")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("x-api-key", "xxxapikey")
+                .header("x-api-key", SENDER_API_KEY)
         )
                 .andExpect(status().isOk)
                 .andReturn()
