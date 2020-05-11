@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import com.google.i18n.phonenumbers.PhoneNumberUtil
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.repository.EventRepository
+import jp.kyuuki.watching.spring.repository.FollowRepository
 import java.util.*
 
 @Service
@@ -20,13 +21,25 @@ class EventService() {
     @Autowired
     lateinit var eventRepository: EventRepository
 
+    @Autowired
+    lateinit var followRepository: FollowRepository
+
     /**
      * イベント取得.
      */
     fun get(user: User): List<Event> {
-        // TODO: フォロー関係でちゃんとイベントを取得
+        // TODO: あまりテストはしていない
+        val relatedUsers = mutableListOf<User>(user)  // 自分自身は入れておく
 
-        return eventRepository.findAll()
+        val followsFrom = followRepository.findByFromUser(user)
+        val followsTo = followRepository.findByToUser(user)
+
+        relatedUsers.addAll(followsFrom.map { it.toUser})
+        relatedUsers.addAll(followsTo.map { it.fromUser})
+
+        logger.debug(relatedUsers.toString())
+
+        return eventRepository.findRelatedUserId(relatedUsers)
     }
 
     /**
