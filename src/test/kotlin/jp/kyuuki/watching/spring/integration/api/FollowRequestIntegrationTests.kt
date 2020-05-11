@@ -80,6 +80,22 @@ class FollowRequestIntegrationTests(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
+    fun testPostFollowRequests_followToMySelf() {
+        val requestBodyJson = mapper.writeValueAsString(
+                mapOf("user_id" to senderUser.id))
+        println(requestBodyJson)
+
+        // API 実行
+        val result = mockMvc.perform(post("/v1/follow_requests")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", SENDER_API_KEY)
+                .content(requestBodyJson)
+        )
+                .andExpect(status().is5xxServerError)
+                .andReturn()
+    }
+
+    @Test
     fun testPostFollowRequestsDecline() {
         // ユーザー登録
         val fromUser = User(phoneNumber = "+819099999991", apiKey = "apikey-from")

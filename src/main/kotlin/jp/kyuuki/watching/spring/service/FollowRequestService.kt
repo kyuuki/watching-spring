@@ -34,24 +34,25 @@ class FollowRequestService() {
      * フォローリクエスト登録.
      */
     fun save(fromUser: User, toUserId: Int): FollowRequest {
+        // 自分自身へのリクエスト
+        if (fromUser.id == toUserId) {
+            // TODO: 例外の種類を要検討
+            throw IllegalArgumentException("Cannot follow request to myself")
+        }
+
         val toUser = userRepository.findByIdOrNull(toUserId)
-
-        // TODO: 自分自身へのリクエスト
-
-        // TODO: 複数回のフォローリクエスト (DB に制約？)
-
-        // TODO: 見つからなかった場合
         if (toUser == null) {
+            // TODO: 例外の種類を要検討
             throw NotFoundException("Cannot find toUser")
         }
+
+        // TODO: 複数回のフォローリクエスト (DB に制約？)
 
         val followRequest = FollowRequest(
                 fromUser = fromUser,
                 toUser = toUser
         )
         followRequestRepository.save(followRequest)
-
-        // TODO: エラー処理
 
         logger.info(followRequest.toString())
 
