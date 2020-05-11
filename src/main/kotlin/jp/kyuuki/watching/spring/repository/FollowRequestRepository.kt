@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository
 
 interface FollowRequestRepository: CrudRepository<FollowRequest, Int> {
     fun findByToUserId(toUserId: Int): List<FollowRequest>
+    fun findByFromUserIdAndToUserId(fromUserId: Int, toUserId: Int):  List<FollowRequest>
 }

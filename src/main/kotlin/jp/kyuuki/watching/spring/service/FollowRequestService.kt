@@ -43,10 +43,19 @@ class FollowRequestService() {
         val toUser = userRepository.findByIdOrNull(toUserId)
         if (toUser == null) {
             // TODO: 例外の種類を要検討
+            logger.error("Cannot find toUser")
             throw NotFoundException("Cannot find toUser")
         }
 
-        // TODO: 複数回のフォローリクエスト (DB に制約？)
+        // とりあえず、同じフォローリクエストはそのままスルー
+        val existedRequests = followRequestRepository.findByFromUserIdAndToUserId(fromUser.id, toUserId)
+        if (existedRequests.size == 1) {
+            logger.debug("existedRequest = ${existedRequests[0]}")
+            return existedRequests[0]
+        } else if (existedRequests.size > 1)  {
+            logger.error("Too many same follow requests")
+            throw IllegalArgumentException("Too many same follow requests")
+        }
 
         val followRequest = FollowRequest(
                 fromUser = fromUser,
