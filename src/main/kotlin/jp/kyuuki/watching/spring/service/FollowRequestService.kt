@@ -2,8 +2,10 @@ package jp.kyuuki.watching.spring.service
 
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
+import jp.kyuuki.watching.spring.model.Follow
 import jp.kyuuki.watching.spring.model.FollowRequest
 import jp.kyuuki.watching.spring.model.User
+import jp.kyuuki.watching.spring.repository.FollowRepository
 import jp.kyuuki.watching.spring.repository.FollowRequestRepository
 import jp.kyuuki.watching.spring.repository.UserRepository
 import org.slf4j.LoggerFactory
@@ -19,6 +21,9 @@ class FollowRequestService() {
 
     @Autowired
     lateinit var followRequestRepository: FollowRequestRepository
+
+    @Autowired
+    lateinit var followRepository: FollowRepository
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -72,10 +77,17 @@ class FollowRequestService() {
      * フォローリクエスト許可.
      */
     fun accept(id: Int) {
-        // TODO: トランザクションにする
-        // TODO: フォローテーブル挿入
         // TODO: 他人のフォローリクエストを許可できないように
 
+        val followRequest = followRequestRepository.findByIdOrNull(id)
+        if (followRequest == null) {
+            // TODO: 例外の種類を要検討
+            logger.error("Cannot find followRequest")
+            throw NotFoundException("Cannot find followRequest")
+        }
+
+        // TODO: トランザクションにする
+        followRepository.save(Follow(fromUser = followRequest.fromUser, toUser = followRequest.toUser))
         followRequestRepository.deleteById(id)
     }
 
