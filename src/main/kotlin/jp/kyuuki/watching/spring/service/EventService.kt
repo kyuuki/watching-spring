@@ -39,7 +39,7 @@ class EventService() {
 
         logger.debug(relatedUsers.toString())
 
-        return eventRepository.findRelatedUserId(relatedUsers)
+        return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers)
     }
 
     /**
