@@ -5,6 +5,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
+@Table(name = "events")
 data class Event(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

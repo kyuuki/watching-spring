@@ -24,10 +24,10 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
-        "INSERT INTO user (phone_number, api_key, nickname) VALUES ('+819011111111', '', 'Tokyo');"
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
+        "INSERT INTO users (phone_number, api_key, nickname) VALUES ('+819011111111', '', 'Tokyo');"
     ])
     fun testGetUser() {
         val result = mockMvc.perform(get("/v1/users?phone_number=+819011111111")
@@ -47,7 +47,7 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @Sql(statements = ["DELETE user WHERE phone_number = '+819099999999';"])
+    @Sql(statements = ["DELETE users WHERE phone_number = '+819099999999';"])
     fun testPostUser() {
         val requestBodyJson = mapper.writeValueAsString(
                 mapOf("phone_number" to mapOf(
@@ -85,9 +85,9 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
     ])
     fun testPutUser() {
         val requestBodyJson = mapper.writeValueAsString(mapOf("nickname" to "ベルリン"))

@@ -13,9 +13,9 @@ class UserRepositoryTests {
 
     @Test
     @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
     ])
     fun findByPhoneNumberTest() {
         val user = userRepository.findByPhoneNumber("+819099999999")

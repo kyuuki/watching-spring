@@ -14,10 +14,10 @@ class EventRepositoryTests {
     //@Test
     @Sql(statements = [
         "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
-        "INSERT INTO event (description, user_id) VALUES ('おはよう', 1);",
-        "INSERT INTO event (description, user_id) VALUES ('おはよう', 1);",
-        "INSERT INTO event (description, user_id) VALUES ('おはよう', 1);"
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');",
+        "INSERT INTO events (description, user_id) VALUES ('おはよう', 1);",
+        "INSERT INTO events (description, user_id) VALUES ('おはよう', 1);",
+        "INSERT INTO events (description, user_id) VALUES ('おはよう', 1);"
     ])
     fun findByUserIdTest() {
         val events = eventRepository.findByUserId(1)

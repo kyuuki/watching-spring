@@ -21,9 +21,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(statements = [
-    "DELETE follow_request;",
-    "DELETE event;",
-    "DELETE user;"
+    "DELETE follow_requests;",
+    "DELETE events;",
+    "DELETE users;"
 ])
 class FollowRequestIntegrationTests(@Autowired val mockMvc: MockMvc) {
     companion object {

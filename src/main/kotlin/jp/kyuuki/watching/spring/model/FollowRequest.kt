@@ -6,6 +6,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
+@Table(name = "follow_requests")
 data class FollowRequest(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

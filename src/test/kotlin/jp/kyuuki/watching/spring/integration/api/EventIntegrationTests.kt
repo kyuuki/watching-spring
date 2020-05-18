@@ -25,9 +25,9 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
     ])
     fun testGetEvents() {
         val result = mockMvc.perform(get("/v1/events")
@@ -44,9 +44,9 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     @Sql(statements = [
-        "DELETE event;",
-        "DELETE user;",
-        "INSERT INTO user (phone_number, nickname, api_key) VALUES ('+819099999999', 'Tokyo', 'xxxapikey');"
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, nickname, api_key) VALUES ('+819099999999', 'Tokyo', 'xxxapikey');"
     ])
     fun testPostEvents() {
         val requestBodyJson = mapper.writeValueAsString(
