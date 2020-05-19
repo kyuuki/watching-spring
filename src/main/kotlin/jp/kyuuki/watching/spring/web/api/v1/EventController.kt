@@ -64,7 +64,7 @@ class EventController: BaseController() {
             throw NotFoundException("Authentication error")
         }
 
-        val event = eventService.save(user, postEvents.description)
+        val event = eventService.save(user, postEvents.name)
 
         return event
     }

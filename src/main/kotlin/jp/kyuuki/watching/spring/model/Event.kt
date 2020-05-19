@@ -10,7 +10,9 @@ data class Event(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Int = 0,
-        val description: String,
+
+        val name: String,
+
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         val createdAt: Date,
 

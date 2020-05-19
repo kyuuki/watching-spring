@@ -50,7 +50,7 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
     ])
     fun testPostEvents() {
         val requestBodyJson = mapper.writeValueAsString(
-                mapOf("description" to "Good morning"))
+                mapOf("name" to "get_up"))
         println(requestBodyJson)
 
         val result = mockMvc.perform(post("/v1/events")
@@ -66,7 +66,7 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
         println(event.toString())
 
         assertNotNull(event)
-        assertEquals("Good morning", event!!.description)
+        assertEquals("get_up", event!!.name)
         assertNotNull(event!!.createdAt)
         assertNotNull(event!!.user.id)
 
@@ -74,12 +74,11 @@ class EventIntegrationTests(@Autowired val mockMvc: MockMvc) {
         val node = mapper.readTree(result.response.contentAsString)
         val user = node.get("user")
         println(node.get("id").asInt())
-        println(node.get("description").asText())
+        println(node.get("name").asText())
         println(node.get("created_at").asText())
 
         assertNotNull(node.get("id").asInt())
-        // TODO: なぜか日本語だと文字化けして正しい結果にならない
-        assertEquals("Good morning", node.get("description").asText())
+        assertEquals("get_up", node.get("name").asText())
         assertNotNull(node.get("created_at").asText())
         assertNotNull(user.get("id").asInt())
         assertEquals("Tokyo", user.get("nickname").asText())

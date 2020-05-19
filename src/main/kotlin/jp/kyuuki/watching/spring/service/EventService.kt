@@ -45,9 +45,9 @@ class EventService() {
     /**
      * イベント登録.
      */
-    fun save(user: User, description: String): Event {
+    fun save(user: User, name: String): Event {
         val event = Event(
-                description = description,
+                name = name,
                 createdAt = Date(),
                 user = user
         )
