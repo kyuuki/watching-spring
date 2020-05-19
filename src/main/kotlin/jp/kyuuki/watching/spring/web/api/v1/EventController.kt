@@ -28,6 +28,8 @@ class EventController: BaseController() {
         logger.info("getEvents")
         logger.info("apiKey = $apiKey")
 
+        returnErrorDebug()
+
         // 認証
         val user: User? = authenticationComponent.authenticate(apiKey)
         if (user == null) {
@@ -55,7 +57,9 @@ class EventController: BaseController() {
                    @RequestBody postEvents: PostEvents): Event {
         logger.info("postEvents")
         logger.info("apiKey = $apiKey")
-        logger.info("description = ${postEvents.description}")
+        logger.info("name = ${postEvents.name}")
+
+        returnErrorDebug()
 
         // 認証
         val user: User? = authenticationComponent.authenticate(apiKey)

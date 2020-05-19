@@ -28,6 +28,8 @@ class FollowRequestController: BaseController() {
     fun getFollowRequests(@RequestHeader(name = "x-api-key") apiKey: String): List<FollowRequest> {
         logger.info("getFollowRequests")
 
+        returnErrorDebug()
+
         // 認証
         // TODO: エラーレスポンス要検討
         val user: User = authenticationComponent.authenticate(apiKey) ?: throw NotFoundException("Authentication error")
@@ -43,6 +45,8 @@ class FollowRequestController: BaseController() {
                            @RequestBody postFollowRequests: PostFollowRequests) {
         logger.info("postFollowRequests")
         logger.info("user_id = ${postFollowRequests.userId}")
+
+        returnErrorDebug()
 
         // 認証
         // TODO: エラーレスポンス要検討
@@ -61,6 +65,8 @@ class FollowRequestController: BaseController() {
         logger.info("postFollowRequestsAccept")
         logger.info("id = $id")
 
+        returnErrorDebug()
+
         // 認証
         // TODO: エラーレスポンス要検討
         val user: User = authenticationComponent.authenticate(apiKey) ?: throw NotFoundException("Authentication error")
@@ -77,6 +83,8 @@ class FollowRequestController: BaseController() {
                                  @PathVariable("id") id: Int) {
         logger.info("postFollowRequestsDecline")
         logger.info("id = $id")
+
+        returnErrorDebug()
 
         // 認証
         // TODO: エラーレスポンス要検討

@@ -29,12 +29,14 @@ class UserController: BaseController() {
         logger.info("getUsers")
         logger.info("phone_number = $phoneNumber")
 
+        returnErrorDebug()
+
         // TODO: Validation
 
         val user = userService.search(phoneNumber)
 
         if (user == null) {
-            // TODO: 404 を返す
+            // 404 を返す (この例外でいい？)
             throw NotFoundException("Cannot find user")
         } else {
             return user
@@ -48,6 +50,8 @@ class UserController: BaseController() {
     fun postUsers(@RequestBody postUsers: PostUsers): Map<String, Any> {
         logger.info("postUsers")
         logger.info(postUsers.toString())
+
+        returnErrorDebug()
 
         val user = userService.registor(
                 postUsers.phoneNumber.countryCode,
@@ -65,6 +69,8 @@ class UserController: BaseController() {
         logger.info("putUsers")
         logger.info("apiKey = $apiKey")
         logger.info(PutUsers.toString())
+
+        returnErrorDebug()
 
         // 認証
         val user: User? = authenticationComponent.authenticate(apiKey)
