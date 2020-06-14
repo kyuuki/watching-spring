@@ -65,10 +65,10 @@ class UserController: BaseController() {
      */
     @RequestMapping("/users", method = [ PUT ])
     fun putUsers(@RequestHeader(name = "x-api-key") apiKey: String,
-                 @RequestBody PutUsers: PutUsers) {
+                 @RequestBody putUsers: PutUsers) {
         logger.info("putUsers")
         logger.info("apiKey = $apiKey")
-        logger.info(PutUsers.toString())
+        logger.info(putUsers.toString())
 
         returnErrorDebug()
 
@@ -79,6 +79,6 @@ class UserController: BaseController() {
             throw NotFoundException("Authentication error")
         }
 
-        userService.update(user.id, PutUsers.nickname)
+        userService.update(user.id, putUsers.nickname, putUsers.fcmToken)
     }
 }

@@ -62,15 +62,19 @@ class UserService() {
 
     /**
      * ユーザー更新.
+     *
+     * - 各項目が null の時は更新しない
      */
-    fun update(id: Int, nickname: String): User? {
+    fun update(id: Int, nickname: String?, fcmToken: String?): User? {
         // 同じ電話番号のユーザーを探す
         var user = userRepository.findByIdOrNull(id)
 
         // TODO: 見つからなかった場合のエラー処理
 
         if (user != null) {
-            user.nickname = nickname
+            // safe call let
+            nickname?.let { user.nickname = it }
+            fcmToken?.let { user.fcmToken = it }
             userRepository.save(user)
         }
 

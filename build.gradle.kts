@@ -36,6 +36,7 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
 	runtimeOnly("com.h2database:h2")
+	// TODO: ローカルで実行するときは毎回コメントアウトする必要がある
 	runtimeOnly("org.postgresql:postgresql")
 
 	// https://github.com/google/libphonenumber/wiki/Android-Studio-setup

@@ -90,6 +90,36 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
         "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
     ])
     fun testPutUser() {
+        val requestBodyJson = mapper.writeValueAsString(mapOf("nickname" to "ベルリン", "fcm_token" to "xxx"))
+        println(requestBodyJson)
+
+        val result = mockMvc.perform(put("/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", "xxxapikey")
+                .content(requestBodyJson)
+        )
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // データベース確認
+        val user = userRepository.findByApiKey("xxxapikey")
+        println(user.toString())
+
+        assertNotNull(user)
+        assertEquals("ベルリン", user!!.nickname)
+        assertEquals("xxx", user!!.fcmToken)
+
+        // レスポンス確認
+        assertEquals("", result.response.contentAsString)
+    }
+
+    @Test
+    @Sql(statements = [
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
+    fun testPutUserOnlyNickname() {
         val requestBodyJson = mapper.writeValueAsString(mapOf("nickname" to "ベルリン"))
         println(requestBodyJson)
 
@@ -111,4 +141,34 @@ class UserIntegrationTests(@Autowired val mockMvc: MockMvc) {
         // レスポンス確認
         assertEquals("", result.response.contentAsString)
     }
+
+    @Test
+    @Sql(statements = [
+        "DELETE events;",
+        "DELETE users;",
+        "INSERT INTO users (phone_number, api_key) VALUES ('+819099999999', 'xxxapikey');"
+    ])
+    fun testPutUserOnlyFcmToken() {
+        val requestBodyJson = mapper.writeValueAsString(mapOf("fcm_token" to "xxx"))
+        println(requestBodyJson)
+
+        val result = mockMvc.perform(put("/v1/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("x-api-key", "xxxapikey")
+                .content(requestBodyJson)
+        )
+                .andExpect(status().isOk)
+                .andReturn()
+
+        // データベース確認
+        val user = userRepository.findByApiKey("xxxapikey")
+        println(user.toString())
+
+        assertNotNull(user)
+        assertEquals("xxx", user!!.fcmToken)
+
+        // レスポンス確認
+        assertEquals("", result.response.contentAsString)
+    }
+
 }

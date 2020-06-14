@@ -18,6 +18,10 @@ data class User(
         var nickname: String? = null,
 
         @JsonIgnore
+        @Column(unique = true)
+        var fcmToken: String? = null,
+
+        @JsonIgnore
         @Column(nullable = false, unique = true)
         var apiKey: String
 )
