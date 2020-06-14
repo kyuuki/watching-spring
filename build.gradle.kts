@@ -41,6 +41,9 @@ dependencies {
 
 	// https://github.com/google/libphonenumber/wiki/Android-Studio-setup
 	implementation("com.googlecode.libphonenumber:libphonenumber:8.2.0")
+
+	// https://firebase.google.com/docs/admin/setup
+	implementation("com.google.firebase:firebase-admin:6.13.0")
 }
 
 tasks.withType<Test> {

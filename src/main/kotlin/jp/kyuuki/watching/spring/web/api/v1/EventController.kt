@@ -1,10 +1,12 @@
 package jp.kyuuki.watching.spring.web.api.v1
 
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.Message
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.web.api.request.PostEvents
 import jp.kyuuki.watching.spring.service.EventService
+import jp.kyuuki.watching.spring.web.api.request.PostEvents
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.GET
 import org.springframework.web.bind.annotation.RequestMethod.POST
 import org.springframework.web.bind.annotation.RestController
+
 
 @RestController
 class EventController: BaseController() {
@@ -69,6 +72,19 @@ class EventController: BaseController() {
         }
 
         val event = eventService.save(user, postEvents.name)
+
+        // TODO: FCM テスト
+        val registrationToken = user.fcmToken
+        val message: Message = Message.builder()
+                .putData("id", event.id.toString())
+                .putData("name", event.name)
+                .putData("created_at", event.createdAt.toString())
+                .putData("user_id", user.id.toString())
+                .putData("user_nickname", user.nickname)
+                .setToken(registrationToken)
+                .build()
+        val response = FirebaseMessaging.getInstance().send(message)
+        logger.debug("Successfully sent message: $response")
 
         return event
     }
