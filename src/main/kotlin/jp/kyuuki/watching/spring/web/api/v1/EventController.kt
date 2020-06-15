@@ -1,7 +1,5 @@
 package jp.kyuuki.watching.spring.web.api.v1
 
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.Message
 import javassist.NotFoundException
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.model.User
@@ -72,19 +70,6 @@ class EventController: BaseController() {
         }
 
         val event = eventService.save(user, postEvents.name)
-
-        // TODO: FCM テスト
-        val registrationToken = user.fcmToken
-        val message: Message = Message.builder()
-                .putData("id", event.id.toString())
-                .putData("name", event.name)
-                .putData("created_at", event.createdAt.toString())
-                .putData("user_id", user.id.toString())
-                .putData("user_nickname", user.nickname)
-                .setToken(registrationToken)
-                .build()
-        val response = FirebaseMessaging.getInstance().send(message)
-        logger.debug("Successfully sent message: $response")
 
         return event
     }

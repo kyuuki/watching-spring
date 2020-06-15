@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import com.google.i18n.phonenumbers.PhoneNumberUtil
+import jp.kyuuki.watching.spring.component.FcmComponent
 import jp.kyuuki.watching.spring.model.Event
 import jp.kyuuki.watching.spring.repository.EventRepository
 import jp.kyuuki.watching.spring.repository.FollowRepository
@@ -24,6 +25,9 @@ class EventService() {
     @Autowired
     lateinit var followRepository: FollowRepository
 
+    @Autowired
+    lateinit var fcmComponent: FcmComponent
+
     /**
      * イベント取得.
      */
@@ -34,8 +38,8 @@ class EventService() {
         val followsFrom = followRepository.findByFromUser(user)
         val followsTo = followRepository.findByToUser(user)
 
-        relatedUsers.addAll(followsFrom.map { it.toUser})
-        relatedUsers.addAll(followsTo.map { it.fromUser})
+        relatedUsers.addAll(followsFrom.map { it.toUser })
+        relatedUsers.addAll(followsTo.map { it.fromUser })
 
         logger.debug(relatedUsers.toString())
 
@@ -56,6 +60,20 @@ class EventService() {
         // TODO: エラー処理
 
         logger.info(event.toString())
+
+        // FCM 通知
+        // フォロー関係のユーザー取得
+        val relatedUsers = mutableListOf<User>()
+
+        val followsFrom = followRepository.findByFromUser(user)
+        val followsTo = followRepository.findByToUser(user)
+
+        relatedUsers.addAll(followsFrom.map { it.toUser })
+        relatedUsers.addAll(followsTo.map { it.fromUser })
+
+        logger.debug(relatedUsers.toString())
+
+        fcmComponent.sendAddEventNotification(relatedUsers, event)
 
         return event
     }
