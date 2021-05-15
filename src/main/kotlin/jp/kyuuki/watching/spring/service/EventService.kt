@@ -1,16 +1,15 @@
 package jp.kyuuki.watching.spring.service
 
-import jp.kyuuki.watching.spring.model.User
-import jp.kyuuki.watching.spring.repository.UserRepository
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.stereotype.Service
-import com.google.i18n.phonenumbers.PhoneNumberUtil
 import jp.kyuuki.watching.spring.component.FcmComponent
 import jp.kyuuki.watching.spring.model.Event
+import jp.kyuuki.watching.spring.model.User
 import jp.kyuuki.watching.spring.repository.EventRepository
 import jp.kyuuki.watching.spring.repository.FollowRepository
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
@@ -43,7 +42,11 @@ class EventService() {
 
         logger.debug(relatedUsers.toString())
 
-        return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers)
+        // 30 件にしぼる
+        // TODO: API で設定できるように
+        val paging: Pageable = PageRequest.of(1, 30)
+
+        return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers, paging)
     }
 
     /**
