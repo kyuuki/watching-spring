@@ -1,27 +1,112 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layouts/admin">
 <head>
     <title>管理画面</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <table border="1">
-        <tr th:each="user:${users}" th:object="${user}">
-            <td th:text="*{id}">
-            </td>
-            <td th:text="*{nickname}">
-            </td>
-        </tr>
+    <!-- タイトル -->
+    <div layout:fragment="title">
+        トップページ
+    </div>
 
-    <table border="1">
-        <tr th:each="event:${events}" th:object="${event}">
-            <td th:text="*{id}">
-            </td>
-            <td th:text="*{user.nickname}">
-            </td>
-            <td th:text="*{name}">
-            </td>
-        </tr>
-    </table>
+    <!-- パンくずリスト -->
+    <div layout:fragment="breadcrumb">
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Starter Page</li>
+        </ol>
+    </div>
+
+    <!-- コンテンツ -->
+    <div layout:fragment="content">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Users</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Nickname</th>
+                                <th>PhoneNumber</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user:${users}" th:object="${user}">
+                                <td th:text="*{id}">
+                                </td>
+                                <td th:text="*{nickname}">
+                                </td>
+                                <td th:text="*{phoneNumber}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Events</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Nickname</th>
+                                <th>Event</th>
+                                <th>Datetime</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="event:${events}" th:object="${event}">
+                                <td th:text="*{id}">
+                                </td>
+                                <td th:text="*{user.nickname}">
+                                </td>
+                                <td th:text="*{name}">
+                                </td>
+                                <td th:text="*{createdAt}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer clearfix">
+                        <ul class="pagination pagination-sm m-0 float-right">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
