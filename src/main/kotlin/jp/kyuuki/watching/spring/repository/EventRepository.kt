@@ -12,5 +12,6 @@ interface EventRepository: JpaRepository<Event, Int> {
 
     // 関連するイベントを取得
     @Query("SELECT e FROM Event e where e.user in :users ORDER BY e.createdAt ASC")
-    fun findRelatedUserIdOrderByCreatedAt(@Param("users") users: List<User>, pageable: Pageable): List<Event>
+    //fun findRelatedUserIdOrderByCreatedAt(@Param("users") users: List<User>, pageable: Pageable): List<Event>
+    fun findRelatedUserIdOrderByCreatedAt(@Param("users") users: List<User>): List<Event>
 }

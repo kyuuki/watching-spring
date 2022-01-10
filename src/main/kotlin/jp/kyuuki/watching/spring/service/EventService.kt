@@ -44,9 +44,10 @@ class EventService() {
 
         // 30 件にしぼる
         // TODO: API で設定できるように
-        val paging: Pageable = PageRequest.of(1, 30)
+        //val paging: Pageable = PageRequest.of(1, 30)
 
-        return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers, paging)
+        //return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers, paging)
+        return eventRepository.findRelatedUserIdOrderByCreatedAt(relatedUsers)
     }
 
     /**
